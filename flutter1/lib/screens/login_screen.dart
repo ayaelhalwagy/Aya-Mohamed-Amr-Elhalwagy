@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter1/screens/category_screen.dart';
+import 'package:flutter1/utils/globals.dart';
 import 'package:flutter1/utils/icons.dart';
 
 class LoginScreen extends StatelessWidget {
   LoginScreen({super.key});
   final _formkey = GlobalKey<FormState>();
+  final userNameController = TextEditingController();
+  
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +57,12 @@ class LoginScreen extends StatelessWidget {
                           height: 5,
                         ),
                         TextFormField(
+                          controller: userNameController,
+                          //onChanged: (value)
+                          //{
+                            //userName = value;
+                           // print(userName);
+                          //},
                             validator: (value) {
                               if (value!.isEmpty) {
                                 return 'Username can not be empty';
@@ -128,6 +137,7 @@ class LoginScreen extends StatelessWidget {
                                 ),
                                 onPressed: () {
                                   if (_formkey.currentState!.validate()) {
+                                    userName = userNameController.text;
                                     Navigator.push(
                                         context,
                                         MaterialPageRoute<void>(

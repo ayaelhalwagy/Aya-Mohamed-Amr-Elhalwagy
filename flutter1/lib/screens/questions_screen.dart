@@ -1,7 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter1/screens/score_screen.dart';
 
-class QuestionsScreen extends StatelessWidget {
+
+class QuestionsScreen extends StatefulWidget {
+  final List<Map<String, dynamic>> questions;
+  final String title;
+  final Color color;
+
+  QuestionsScreen({
+    required this.questions,
+    required this.title,
+    required this.color,
+  });
+
+  @override
+  State<QuestionsScreen> createState() => _QuestionsScreenState();
+}
+
+class _QuestionsScreenState extends State<QuestionsScreen> {
+  int _questionsIndex = 0;
+  int _totalScore = 0;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,23 +32,14 @@ class QuestionsScreen extends StatelessWidget {
         ),
         actions: [
           Icon(Icons.message),
-          SizedBox(
-            width: 12,
-          ),
-          Icon(
-            Icons.notification_add,
-          ),
-          SizedBox(
-            width: 12,
-          ),
+          SizedBox(width: 12),
+          Icon(Icons.notification_add),
+          SizedBox(width: 12),
           Icon(Icons.search),
-          SizedBox(
-            width: 12,
-          )
+          SizedBox(width: 12),
         ],
-        title: Text("Quiz app"),
-        // centerTitle: false,
-        backgroundColor: Colors.green,
+        title: Text(widget.title),
+        backgroundColor: widget.color,
       ),
       body: Padding(
         padding: const EdgeInsets.all(22),
@@ -38,52 +48,44 @@ class QuestionsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Text(
-                "1st Qestion",
+                "Question number ${_questionsIndex + 1}",
                 style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
               ),
               Text(
-                "What is the last country to host the world cup?",
+                widget.questions[_questionsIndex]['question'] ??
+                    'No question available',
                 style: TextStyle(fontSize: 16),
               ),
-              SizedBox(
-                height: 22,
-              ),
-              ElevatedButton(
+              SizedBox(height: 22),
+              for (int i = 0;
+                  i < (widget.questions[_questionsIndex]['answers'] as List).length;
+                  i++)
+                ElevatedButton(
                   onPressed: () {
-                    Navigator.push(
+                    _totalScore += widget.questions[_questionsIndex]['answers'][i]
+                        ['score'] as int;
+                    if (_questionsIndex < widget.questions.length - 1) {
+                      setState(() {
+                        _questionsIndex++;
+                      });
+                    } else {
+                      Navigator.push(
                         context,
                         MaterialPageRoute<void>(
-                          builder: (BuildContext context) => ScoreScreen(),
-                        ));
+                          builder: (BuildContext context) => ScoreScreen(
+                            totalScore: _totalScore,
+                            numberOfQuestions: widget.questions.length,
+                          ),
+                        ),
+                      );
+                    }
+
+                    print('Your index is ${_questionsIndex}');
+                    print('Your total score is ${_totalScore}');
                   },
-                  child: Text("USA")),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => ScoreScreen(),
-                        ));
-                  },
-                  child: Text("Qatar")),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => ScoreScreen(),
-                        ));
-                  },
-                  child: Text("France")),
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute<void>(
-                          builder: (BuildContext context) => ScoreScreen(),
-                        ));
-                  },
-                  child: Text("Egypt")),
+                  child:
+                      Text(widget.questions[_questionsIndex]['answers'][i]['ans']),
+                ),
             ],
           ),
         ),

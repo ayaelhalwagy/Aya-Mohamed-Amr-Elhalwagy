@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter1/screens/category_screen.dart';
+import 'package:flutter1/screens/questions_screen.dart';
 import 'screens/landing_screen.dart';
 
 void main() {
